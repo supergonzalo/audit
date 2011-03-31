@@ -11,5 +11,5 @@ def edif(request, edif):
 	return render_to_response('edificio.html', G(edif))
 
 def formato(request,dummy):
-	response = open(os.getcwd() + "/templates/negro.png").read()
+	response = open(os.getcwd() + "/scorecard//templates/negro.png").read()
 	return HttpResponse(response)

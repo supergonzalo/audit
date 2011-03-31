@@ -1,9 +1,9 @@
 from django.db import models
 import pickle
 
-f=open('matlist.pickle','r')
+f=open('./scorecard/matlist.pickle','r')
 mat=pickle.load(f)
-f=open('loc_choices.pickle','r')
+f=open('./scorecard/loc_choices.pickle','r')
 localidad_choices=pickle.load(f)
 
 

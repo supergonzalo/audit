@@ -26,7 +26,7 @@ gadm={
 10000:[1.128,1.114,1.105,1.099,1.093,1.088,1.083,1.079,1.067,1.050,1.035,0.988]
 }
 
-f=open('weather.pickle')
+f=open('./scorecard/weather.pickle')
 weather=pickle.load(f)
 
 paislacion={'Sin aislacion':{1:1.28,2:1.28,3:1.38,4:1.38,5:1.48,6:1.48},'Aislacion perimetral':{1:1,2:1,3:1.08,4:1.08,5:1.17,6:1.17},'Aislacion total':{1:0.85,2:0.85,3:0.93,4:0.93,5:1,6:1}}
