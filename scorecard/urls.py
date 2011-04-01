@@ -15,7 +15,8 @@ urlpatterns = patterns('',
     (r'^admin/', include(admin.site.urls)),
     (r'^lista/$', 'scorecard.views.lista'),
     (r'^lista/edificio/(.*)', 'scorecard.views.edif'),
-    (r'^(head)', 'scorecard.views.formato'),
+    (r'^head', 'scorecard.views.formato'),
+    (r'^home', 'scorecard.views.home'),
 
 )
 

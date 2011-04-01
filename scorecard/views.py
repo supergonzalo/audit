@@ -10,6 +10,11 @@ def lista(request):
 def edif(request, edif):
 	return render_to_response('edificio.html', G(edif))
 
-def formato(request,dummy):
-	response = open(os.getcwd() + "/scorecard//templates/negro.png").read()
+def formato(request):
+	response = open(os.getcwd() + "/scorecard/templates/negro.png").read()
 	return HttpResponse(response)
+
+def home(request):
+        mensaje = "Testing de evaluador de performance de edificios. Uso privado."
+        return render_to_response('tagg.html', {'mensaje': mensaje})
+
