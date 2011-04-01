@@ -1,6 +1,5 @@
-{% extends "template.html" %}
+{% extends "tagg.html" %}
 		{% block "style" %}
-<style type="text/css">
 table.iram {
 	border-width: medium;
 	border-spacing: ;
@@ -29,7 +28,6 @@ table.iram td {
 {% endblock %}
                 {% block "body" %}
 
-<div='iram'>
 <table class='iram' align="center">
 <tr><th><strong>Edificio: {{ current }}</strong></th></tr>
 <tr><td>Envolvente: {{ envolvente }}</td></tr>
@@ -57,11 +55,10 @@ table.iram td {
 <tr><td>G Calculo</td><td> {{ G }} {{ Gsuma }}</td></tr>
 <tr><td>G Admisible</td><td> {{ Gadm }} </td></tr>
 </table>
-</div>
                 {% endblock "body" %}
 
-		{% block "column" %}
+		{% block "report" %}
 <p><a href='http://127.0.0.1:8000/lista'>Volver al listado de edificios</a>
-                {% endblock "column" %}
+                {% endblock  %}
 
 

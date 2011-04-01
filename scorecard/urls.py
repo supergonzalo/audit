@@ -16,7 +16,7 @@ urlpatterns = patterns('',
     (r'^lista/$', 'scorecard.views.lista'),
     (r'^lista/edificio/(.*)', 'scorecard.views.edif'),
     (r'^head', 'scorecard.views.formato'),
-    (r'^home', 'scorecard.views.home'),
+    (r'^$', 'scorecard.views.home'),
 
 )
 

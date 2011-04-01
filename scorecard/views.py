@@ -8,7 +8,10 @@ def lista(request):
 	return render_to_response('lista.html', {'current': edificio.objects.all()}) 
 
 def edif(request, edif):
-	return render_to_response('edificio.html', G(edif))
+	var=G(edif)
+        var['mensaje'] = "Informe"
+        var['columna'] = 0
+	return render_to_response('edificio.html', var)
 
 def formato(request):
 	response = open(os.getcwd() + "/scorecard/templates/negro.png").read()
@@ -16,5 +19,6 @@ def formato(request):
 
 def home(request):
         mensaje = "Testing de evaluador de performance de edificios. Uso privado."
-        return render_to_response('tagg.html', {'mensaje': mensaje})
+	columna = "Version de prueba"
+        return render_to_response('tagg.html', {'mensaje': mensaje,'columna':columna})
 
