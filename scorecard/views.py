@@ -9,8 +9,8 @@ def lista(request):
 
 def edif(request, edif):
 	var=G(edif)
-        var['mensaje'] = "Informe"
-        var['columna'] = 0
+        var['mensaje'] = "Testing de evaluacion de performance de edificios. Uso privado."
+        var['columna'] = ""
 	return render_to_response('edificio.html', var)
 
 def formato(request):
@@ -18,7 +18,9 @@ def formato(request):
 	return HttpResponse(response)
 
 def home(request):
-        mensaje = "Testing de evaluador de performance de edificios. Uso privado."
+        mensaje = "Testing de evaluacion de performance de edificios. Uso privado."
+	obj="Objetivos"
+	body="Mediante la construccion de un modelo simulado del sistema edificio+equipos+usuarios proyectar el consumo energetico teorico y contrastarlo contra valores medidos. Dimensionar intalaciones y equipos, evaluar estrategias para optimizar el consumo energetico, proyectar ahorro."
 	columna = "Version de prueba"
-        return render_to_response('tagg.html', {'mensaje': mensaje,'columna':columna})
+        return render_to_response('tagg.html', {'mensaje': mensaje,'columna':columna,'obj':obj,'body':body})
 

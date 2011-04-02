@@ -55,7 +55,6 @@ def G(edif): # G real del edificio
 	volume=0.0
         for amb in ambientes:
                 volume+=amb.largo_ambiente*amb.ancho_ambiente*amb.altura_techo*amb.cantidad
-
         gd_cal=gdia(build.temperatura_aa,build.localidad)
 	var=dict()
         var['current']=edif
@@ -76,7 +75,6 @@ def G(edif): # G real del edificio
                 	temp[cada]={'name':est[0].nombre+", "+str(cada.nombre_amb),'sup':cada.area_pared*cantidad,'k':est[0].k,'env':cada.area_pared*est[0].k*cantidad}
 		        var['envolvente']+=cada.area_pared*cada.cantidad*est[0].k
         	var['opacos']=temp
-
 	except:
 		pass
 	temp=dict()
@@ -87,12 +85,10 @@ def G(edif): # G real del edificio
                         	cantidad=4*cada.cantidad
                 	else:
                         	cantidad=1*cada.cantidad
-
 	                est=estructura.objects.filter(nombre=cada.tipo_de_pared)
         	        temp[cada]={'name':est[0].nombre+", "+str(cada.nombre_amb),'sup':cada.area_pared*cantidad,'k':est[0].k,'env':cada.area_pared*est[0].k*cantidad}
                         var['envolvente']+=cada.area_pared*cada.cantidad*est[0].k
 		var['noopacos']=temp
-
 	except:
 		pass
         var['n']=build.recambios_de_aire
