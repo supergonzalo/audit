@@ -55,6 +55,11 @@ table.iram td {
 <tr><td>G Calculo</td><td> {{ G }} {{ Gsuma }}</td></tr>
 <tr><td>G Admisible</td><td> {{ Gadm }} </td></tr>
 </table>
+<p>
+{% for key,value in ilum.items %}
+<p><strong>Ambiente:</strong> {{ key }}<br>Consumo iluminacion mensual: {{ value }} W
+{% endfor %}
+
                 {% endblock "body" %}
 
 		{% block "report" %}

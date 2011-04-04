@@ -11,7 +11,7 @@ class paredAdmin(admin.ModelAdmin):
 	list_display=('nombre_edif','nombre_amb','orientacion_pared')
 		
 class artefactoAdmin(admin.ModelAdmin):
-        list_display=('nombre_edif','ambiente_artefacto','descriptor')
+        list_display=('descriptor','nombre_edif','ambiente_artefacto')
 
 
 class estructuraAdmin(admin.ModelAdmin):

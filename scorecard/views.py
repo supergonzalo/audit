@@ -11,6 +11,7 @@ def edif(request, edif):
 	var=G(edif)
         var['mensaje'] = "Testing de evaluacion de performance de edificios. Uso privado."
         var['columna'] = ""
+	var['ilum']=ilum(edif)
 	return render_to_response('edificio.html', var)
 
 def formato(request):

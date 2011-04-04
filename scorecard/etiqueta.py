@@ -42,6 +42,69 @@ def lookup_G(vol,gdia):
 def pp(iso,zbio):
 	return paislacion[iso][int(zbio)] 
 
+from datetime import time
+from datetime import timedelta
+
+def timediff(btime, stime):
+    btdelta = timedelta(hours=btime.hour, minutes=btime.minute, seconds=btime.second)
+    stdelta = timedelta(hours=stime.hour, minutes=stime.minute, seconds=stime.second)
+    tdiff = btdelta - stdelta
+    tdiffsec = tdiff.seconds
+    if tdiffsec < 60 and tdiffsec > 0:
+        return (0, 0, int(tdiffsec))
+    elif tdiffsec < 3600 and tdiffsec > 0:
+        tdiffsplit = str(tdiffsec/60.0).split('.')
+        tdiffmin = int(tdiffsplit[0])
+        tdiffsec = float("0."+tdiffsplit[1])*60
+        return (0, int(tdiffmin), int(tdiffsec))
+    elif tdiffsec > 0:
+        tdiffhourmin = str(tdiffsec/3600.0).split('.')
+        tdiffhour = int(tdiffhourmin[0])
+        tdiffminsec = str(float("0."+tdiffhourmin[1])*60).split('.')
+        tdiffmin = int(tdiffminsec[0])
+        tdiffsec = float("0."+tdiffminsec[1])*60
+        return (tdiffhour, tdiffmin, int(tdiffsec))
+    else:
+        return (0, 0, 0)
+
+def trabajo(edif):
+        build=edificio.objects.get(nombre_edif=edif)
+        horas_semana=(0,0,0)
+        horas_sab=(0,0,0)
+        horas_dom=(0,0,0)
+        try:
+                horas_semana=timediff(build.hora_fin_semana,build.hora_inicio_semana)
+        except:
+                pass
+        try:
+                horas_sab=timediff(build.hora_fin,build.hora_inicio_sabado)
+        except:
+                pass
+        try:
+                horas_dom=timediff(build.hora_fin_domingo,build.hora_inicio_domingo)
+        except:
+                pass
+        horas_mes=(horas_semana[0]+horas_semana[1]/60.0)*20+(horas_sab[0]+horas_sab[1]/60.0)*4+(horas_dom[0]+horas_dom[1]/60.0)
+        return horas_mes
+
+def consumo_ilum(amb,helre,horas_mes):
+	ciclo={'E':1,'L':(horas_mes/720.0),'O':(horas_mes/720.0)/2,'N':1-(horas_mes/720.0)} #asumo que el mes tiene 720 horas
+	if helre==0:
+	#Se trabaja de noche o no hay vidrio o no hay info
+		iluminacion=1 #Todo el tiempo encendido
+	else:
+	#Se descuentan las horas de sol
+		iluminacion=1-(helre/100.0)
+	artefactos=artefacto.objects.filter(ambiente_artefacto=amb.pk).exclude(tipo_artefacto=u'Computadora').exclude(tipo_artefacto='Impresora').exclude(tipo_artefacto=u'Proyector').exclude(tipo_artefacto=u'Heladera').exclude(tipo_artefacto=u'Cocina electrica').exclude(tipo_artefacto=u'Estufa electrica').exclude(tipo_artefacto=u'Otro')
+	consumo=0
+	print "\nArtefactos\n"
+	for elemento in artefactos:
+		print elemento
+		consumo+=elemento.potencia_activo*ciclo[elemento.ciclo_activo]*iluminacion*720*elemento.cantidad
+	print consumo
+	return consumo #Consumo mensual para los artefactos en el ambiente
+
+
 #################################################### End of Auxiliares #######################################
 
 def Gadm(edif,volume): #G maximo para una localidad y edificio
@@ -101,3 +164,19 @@ def G(edif): # G real del edificio
         var['Gsuma']=var['pvtransm']+0.35
 	return var
 
+def ilum(edif):
+	horas_mes=trabajo(edif)
+	build=edificio.objects.get(nombre_edif=edif)
+	ambientes=ambiente.objects.filter(nombre_edif=build)
+	temp=dict()
+	helre=(float(weather[build.localidad]['invierno']['HELRE'])+float(weather[build.localidad]['verano']['HELRE']))/2
+	for amb in ambientes:
+		vidrios=False
+		vidrios=pared.objects.filter(nombre_edif=build).filter(nombre_amb=amb.pk).filter(tipo_de_cerramiento='B')
+		if vidrios and build.hora_inicio_semana < build.hora_fin_semana:
+		#el ambiente tiene luz natural y se trabaja de dia
+			temp[amb]=float(consumo_ilum(amb,helre,horas_mes))
+		else:
+		#el ambiente no tiene luz natural o se trabaja de noche
+			temp[amb]=float(consumo_ilum(amb,0,horas_mes))
+	return temp
