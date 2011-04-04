@@ -175,8 +175,8 @@ def ilum(edif):
 		vidrios=pared.objects.filter(nombre_edif=build).filter(nombre_amb=amb.pk).filter(tipo_de_cerramiento='B')
 		if vidrios and build.hora_inicio_semana < build.hora_fin_semana:
 		#el ambiente tiene luz natural y se trabaja de dia
-			temp[amb]=float(consumo_ilum(amb,helre,horas_mes))
+			temp[amb]=(float(consumo_ilum(amb,helre,horas_mes)),amb.cantidad)
 		else:
 		#el ambiente no tiene luz natural o se trabaja de noche
-			temp[amb]=float(consumo_ilum(amb,0,horas_mes))
+			temp[amb]=(float(consumo_ilum(amb,0,horas_mes)),amb.cantidad)
 	return temp

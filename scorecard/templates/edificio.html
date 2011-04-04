@@ -57,7 +57,9 @@ table.iram td {
 </table>
 <p>
 {% for key,value in ilum.items %}
-<p><strong>Ambiente:</strong> {{ key }}<br>Consumo iluminacion mensual: {{ value }} W
+<p><strong>Tipo de Ambiente:</strong> {{ key }}
+<br>Cantidad de ambientes: {{ value.1 }}
+<br>Consumo Unitario en Iluminacion mensual: {{ value.0 }} W
 {% endfor %}
 
                 {% endblock "body" %}

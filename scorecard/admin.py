@@ -40,6 +40,8 @@ class estructuraAdmin(admin.ModelAdmin):
 		#print "CUENTA: 0.195 + %s+ %s + %s +%s "%(obj.espesor_pared/obj.pared_externa,obj.espesor_medio/obj.medio,obj.espesor_interna/obj.pared_interna,obj.espesor_revest/obj.revestimiento_interno)
 		obj.save()
 		
+class ambienteAdmin(admin.ModelAdmin):
+        list_display=('nombre_edif','nombre_amb')
 
 
 
@@ -49,7 +51,7 @@ class estructuraAdmin(admin.ModelAdmin):
 
 
 admin.site.register(edificio)
-admin.site.register(ambiente)
+admin.site.register(ambiente,ambienteAdmin)
 admin.site.register(artefacto,artefactoAdmin)
 admin.site.register(pared,paredAdmin)
 admin.site.register(estructura,estructuraAdmin)
