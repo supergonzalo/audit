@@ -14,21 +14,25 @@ for each in range(len(a)):
 handl=open('matlist.pickle','w')
 pickle.dump(mat,handl)
 
-f=open('datosclima.csv','r')
+f=open('IRAM11603_invierno.csv','r')
+e=open('IRAM11603_verano.csv','r')
+g=e.readlines()
 a=f.readlines()
+summer=g.pop(0).strip('\n').split(',')
+winter=a.pop(0).strip('\n').split(',')
 choices=list()
 weather=dict()
-temp=dict()
 for line in range(len(a)):
-	b=a[line].split(';')
+	invierno=dict()
+	verano=dict()
+	b=a[line].strip('\n').split(',')
 	choices.append((b[0],b[0]))
-	gen=b[1].split(',')
-	temp[gen[0]]={'LAT':gen[1],'LONG':gen[2],'ASNM':gen[3],'ZBIO':gen[4]}
-        gen=b[2].split(',')
-        temp[gen[0]]={'TMED':gen[1],'TMAX':gen[2],'TMIN':gen[3],'TDMD':gen[4],'TDMN':gen[5],'TROC':gen[6],'TVAP':gen[7],'HR':gen[8],'PREC':gen[9],'HELRE':gen[10],'GD18':gen[11],'GD20':gen[12],'GD22':gen[13]}
-        gen=b[3].split(',')
-        temp[gen[0]]={'TMAX':gen[1],'TMED':gen[2],'TMIN':gen[3],'TDMD':gen[4],'TDMX':gen[5],'TEC-MD':gen[6],'TEC-MX':gen[7],'TROC':gen[8],'TVAP':gen[9],'HR':gen[10],'PREC':gen[11],'HELRE':gen[12]}
-	weather[b[0]]=temp
+	for each in range(len(b)):
+		invierno[winter[each]]=b[each] #datos de invierno de la estacion
+        b=g[line].strip('\n').split(',')
+        for each in range(len(b)):
+                verano[summer[each]]=b[each] #datos de verano de la estacion
+	weather[b[0]]={'invierno':invierno,'verano':verano}
 handl=open('loc_choices.pickle','w')
 pickle.dump(choices,handl)
 handl=open('weather.pickle','w')

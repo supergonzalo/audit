@@ -4,7 +4,7 @@ from models import *
 import bisect
 
 #Tabla de valores de G en funcion de grados dia y superficie
-gd=[900,1000,1100,1200,1300,1400,1500,2000,2500,3000,4000,5000]
+gd=[900,1000,1100,1200,1300,1400,1500,2000,2500,3000,4000,5000000]
 volumen=[50,100,200,300,400,500,1000,1500,2000,2500,3000,3500,4000,4500,5000,7500,10000]
 gadm={
 50:[2.713,2.661,2.686,2.560,2.530,2.493,2.469,2.457,2.409,2.353,2.287,2.118],
@@ -34,7 +34,7 @@ paislacion={'Sin aislacion':{1:1.28,2:1.28,3:1.38,4:1.38,5:1.48,6:1.48},'Aislaci
 
 
 def gdia(tconfort,localidad):
-	return int(weather[localidad]['invierno']['GD'+str(tconfort)])
+	return float(weather[localidad]['invierno']['GD'+str(tconfort)])
 
 def lookup_G(vol,gdia):
 	return gadm[volumen[bisect.bisect_left(volumen,vol)]][bisect.bisect_left(gd,gdia)]
@@ -97,11 +97,8 @@ def consumo_ilum(amb,helre,horas_mes):
 		iluminacion=1-(helre/100.0)
 	artefactos=artefacto.objects.filter(ambiente_artefacto=amb.pk).exclude(tipo_artefacto=u'Computadora').exclude(tipo_artefacto='Impresora').exclude(tipo_artefacto=u'Proyector').exclude(tipo_artefacto=u'Heladera').exclude(tipo_artefacto=u'Cocina electrica').exclude(tipo_artefacto=u'Estufa electrica').exclude(tipo_artefacto=u'Otro')
 	consumo=0
-	print "\nArtefactos\n"
 	for elemento in artefactos:
-		print elemento
 		consumo+=elemento.potencia_activo*ciclo[elemento.ciclo_activo]*iluminacion*720*elemento.cantidad
-	print consumo
 	return consumo #Consumo mensual para los artefactos en el ambiente
 
 
@@ -157,7 +154,9 @@ def G(edif): # G real del edificio
         var['n']=build.recambios_de_aire
 	var['perdidan']=var['n']*0.35
         var['perim']=build.perimetro_planta
-        var['pp']=pp(build.aislacion_planta,weather[build.localidad]['generales']['ZBIO'])
+	print build.localidad
+	print weather[build.localidad]['verano']['ZBIO']
+        var['pp']=pp(build.aislacion_planta,weather[build.localidad]['verano']['ZBIO'])
         var['perdida']=var['perim']*var['pp']
         var['ptransm']=var['perdida']+var['envolvente']
         var['pvtransm']=var['ptransm']/var['volumen']
@@ -170,6 +169,7 @@ def ilum(edif):
 	ambientes=ambiente.objects.filter(nombre_edif=build)
 	temp=dict()
 	helre=(float(weather[build.localidad]['invierno']['HELRE'])+float(weather[build.localidad]['verano']['HELRE']))/2
+	print "Helre=%s"%helre
 	for amb in ambientes:
 		vidrios=False
 		vidrios=pared.objects.filter(nombre_edif=build).filter(nombre_amb=amb.pk).filter(tipo_de_cerramiento='B')
