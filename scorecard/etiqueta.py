@@ -87,19 +87,24 @@ def trabajo(edif):
         horas_mes=(horas_semana[0]+horas_semana[1]/60.0)*20+(horas_sab[0]+horas_sab[1]/60.0)*4+(horas_dom[0]+horas_dom[1]/60.0)
         return horas_mes
 
-def consumo_ilum(amb,helre,horas_mes):
-	ciclo={'E':1,'L':(horas_mes/720.0),'O':(horas_mes/720.0)/2,'N':1-(horas_mes/720.0)} #asumo que el mes tiene 720 horas
+def consumo(amb,helre,horas_mes):
+	ciclo={'E':1,'L':(horas_mes/744.0),'O':(horas_mes/744.0)/2,'N':1-(horas_mes/744.0)} #asumo que el mes tiene 744 horas
 	if helre==0:
 	#Se trabaja de noche o no hay vidrio o no hay info
 		iluminacion=1 #Todo el tiempo encendido
 	else:
 	#Se descuentan las horas de sol
 		iluminacion=1-(helre/100.0)
-	artefactos=artefacto.objects.filter(ambiente_artefacto=amb.pk).exclude(tipo_artefacto=u'Computadora').exclude(tipo_artefacto='Impresora').exclude(tipo_artefacto=u'Proyector').exclude(tipo_artefacto=u'Heladera').exclude(tipo_artefacto=u'Cocina electrica').exclude(tipo_artefacto=u'Estufa electrica').exclude(tipo_artefacto=u'Otro')
-	consumo=0
+	artefactos=artefacto.objects.filter(ambiente_artefacto=amb.pk)
+	light=0
+	equip=0
 	for elemento in artefactos:
-		consumo+=elemento.potencia_activo*ciclo[elemento.ciclo_activo]*iluminacion*720*elemento.cantidad
-	return consumo #Consumo mensual para los artefactos en el ambiente
+		if elemento.tipo_artefacto not in ('Computadora','Impresora',u'Proyector',u'Heladera',u'Cocina electrica',u'Estufa electrica',u'Otro'):
+			light+=elemento.potencia_activo*ciclo[elemento.ciclo_activo]*iluminacion*elemento.cantidad*744.0/(1000.0)
+		else:
+                        equip+=elemento.potencia_activo*ciclo[elemento.ciclo_activo]*elemento.cantidad*744.0/(1000.0)
+
+	return {'iluminacion':light,'equipamiento':equip} #Consumo mensual para los artefactos en el ambiente
 
 
 #################################################### End of Auxiliares #######################################
@@ -163,20 +168,20 @@ def G(edif): # G real del edificio
         var['Gsuma']=var['pvtransm']+0.35
 	return var
 
-def ilum(edif):
+def wattage(edif):
 	horas_mes=trabajo(edif)
 	build=edificio.objects.get(nombre_edif=edif)
 	ambientes=ambiente.objects.filter(nombre_edif=build)
 	temp=dict()
 	helre=(float(weather[build.localidad]['invierno']['HELRE'])+float(weather[build.localidad]['verano']['HELRE']))/2
-	print "Helre=%s"%helre
 	for amb in ambientes:
 		vidrios=False
 		vidrios=pared.objects.filter(nombre_edif=build).filter(nombre_amb=amb.pk).filter(tipo_de_cerramiento='B')
 		if vidrios and build.hora_inicio_semana < build.hora_fin_semana:
 		#el ambiente tiene luz natural y se trabaja de dia
-			temp[amb]=(float(consumo_ilum(amb,helre,horas_mes)),amb.cantidad)
+			temp[amb]=(consumo(amb,helre,horas_mes),amb.cantidad)
 		else:
 		#el ambiente no tiene luz natural o se trabaja de noche
-			temp[amb]=(float(consumo_ilum(amb,0,horas_mes)),amb.cantidad)
+			temp[amb]=(consumo(amb,0,horas_mes),amb.cantidad)
 	return temp
+
