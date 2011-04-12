@@ -59,7 +59,7 @@ table.iram td {
 {% for key,value in equipos.items %}
 <p><strong>Tipo de Ambiente:</strong> {{ key }}
         {% for k,v in value.0.items %}
-        <br>Consumo mensual en {{ k }}: {{ v }} kwh por mes
+        <br>Consumo en {{ k }}: {{ v }} kwh por mes
         {% endfor %}
 {% endfor %}
 
